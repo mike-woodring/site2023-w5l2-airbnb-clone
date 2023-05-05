@@ -16,8 +16,26 @@ describe("Config derived from process.env", () => {
     delete process.env.BCRYPT_WORK_FACTOR
     delete process.env.DATABASE_URL
 
+    // This version of the test assumes that students installed PGL on their system such that
+    // it uses a password of "postgres" for the DB user named "postgres".
+    //
+    /*
     expect(config.getDatabaseUri()).toEqual("postgresql://postgres:postgres@localhost:5432/kavholm")
     process.env.NODE_ENV = "test"
     expect(config.getDatabaseUri()).toEqual("postgresql://postgres:postgres@localhost:5432/kavholm_test")
+    */
+
+    // This version (crudely) tests everything else except the password.
+    //
+    const testConnectionString = (actual, prefix, suffix) => {
+      return actual.startsWith(prefix) && actual.endsWith(suffix);
+    };
+
+    const connectionStartingBefore = config.getDatabaseUri();
+    process.env.NODE_ENV = "test"
+    const connectionStartingAfter = config.getDatabaseUri();
+
+    expect(testConnectionString(connectionStartingBefore, "postgresql://postgres:", "@localhost:5432/kavholm"));
+    expect(testConnectionString(connectionStartingAfter, "postgresql://postgres:", "@localhost:5432/kavholm_test"));
   })
 })

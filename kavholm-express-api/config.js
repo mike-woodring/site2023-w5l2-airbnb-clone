@@ -15,7 +15,23 @@ function getDatabaseUri() {
   const dbProdName = process.env.DATABASE_NAME || "kavholm"
   const dbName = process.env.NODE_ENV === "test" ? dbTestName : dbProdName
 
-  return process.env.DATABASE_URL || `postgresql://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`
+  const dbUri = process.env.DATABASE_URL || `postgresql://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`;
+
+  /*
+  console.log({
+    "context": "getDatabaseUri",
+    "dbUser": dbUser,
+    "dbPass": dbPass,
+    "dbHost": dbHost,
+    "dbPort": dbPort,
+    "dbTestName": dbTestName,
+    "dbProdName": dbProdName,
+    "dbName": dbName,
+    "dbUri": dbUri
+  });
+  */
+
+  return dbUri;
 }
 
 const BCRYPT_WORK_FACTOR = IS_TESTING ? 1 : 13
